@@ -12,12 +12,15 @@ const cos = Math.cos;
 const sin = Math.sin;
 const π = Math.PI;
 
-const f_matrix_times = (([[a, b], [c, d]], [x, y]) => [a * x + b * y, c * x + d * y]);
-const f_rotate_matrix = (x => [[cos(x), -sin(x)], [sin(x), cos(x)]]);
-const f_vec_add = (([a1, a2], [b1, b2]) => [a1 + b1, a2 + b2]);
+const f_matrix_times = ([[a, b], [c, d]], [x, y]) => [a * x + b * y, c * x + d * y];
+const f_rotate_matrix = (x) => [
+  [cos(x), -sin(x)],
+  [sin(x), cos(x)],
+];
+const f_vec_add = ([a1, a2], [b1, b2]) => [a1 + b1, a2 + b2];
 
-const drawArc = (([cx, cy], [rx, ry], [t1, Δ], φ,) => {
-    /* [
+const drawArc = ([cx, cy], [rx, ry], [t1, Δ], φ) => {
+  /* [
     returns a SVG path element that represent a ellipse.
     cx,cy → center of ellipse
     rx,ry → major minor radius
@@ -28,21 +31,21 @@ const drawArc = (([cx, cy], [rx, ry], [t1, Δ], φ,) => {
     URL: SVG Circle Arc http://xahlee.info/js/svg_circle_arc.html
     Version 2019-06-19
      ] */
-    // convert t1 from degree to radian
-    t1 = t1 / 360 * 2 * π;
-    // convert Δ from degree to radian
-    Δ = Δ / 360 * 2 * π;
-    Δ = Δ % (2 * π);
-    // convert φ from degree to radian
-    φ = φ / 360 * 2 * π;
-    const rotMatrix = f_rotate_matrix(φ);
-    const [sX, sY] = (f_vec_add(f_matrix_times(rotMatrix, [rx * cos(t1), ry * sin(t1)]), [cx, cy]));
-    const [eX, eY] = (f_vec_add(f_matrix_times(rotMatrix, [rx * cos(t1 + Δ), ry * sin(t1 + Δ)]), [cx, cy]));
-    const fA = ((Δ > π) ? 1 : 0);
-    const fS = ((Δ > 0) ? 1 : 0);
-    const d = `M ${sX} ${sY} A ${[rx, ry, φ / (2 * π) * 360, fA, fS, eX, eY].join(" ")}`;
-    return d;
-});
+  // convert t1 from degree to radian
+  t1 = (t1 / 360) * 2 * π;
+  // convert Δ from degree to radian
+  Δ = (Δ / 360) * 2 * π;
+  Δ = Δ % (2 * π);
+  // convert φ from degree to radian
+  φ = (φ / 360) * 2 * π;
+  const rotMatrix = f_rotate_matrix(φ);
+  const [sX, sY] = f_vec_add(f_matrix_times(rotMatrix, [rx * cos(t1), ry * sin(t1)]), [cx, cy]);
+  const [eX, eY] = f_vec_add(f_matrix_times(rotMatrix, [rx * cos(t1 + Δ), ry * sin(t1 + Δ)]), [cx, cy]);
+  const fA = Δ > π ? 1 : 0;
+  const fS = Δ > 0 ? 1 : 0;
+  const d = `M ${sX} ${sY} A ${[rx, ry, (φ / (2 * π)) * 360, fA, fS, eX, eY].join(' ')}`;
+  return d;
+};
 
 // get the data with async and start the chain of functions
 // pass the data to the next function in the chain
@@ -64,10 +67,34 @@ const drawArc = (([cx, cy], [rx, ry], [t1, Δ], φ,) => {
 // the theme toggle should remember your choice in localStorage
 // and it should sync with system changes
 
+const fetchData = async () => {
+  return fetch('../assets/data/data.json', {}).then((response) => response.json());
+};
+
+const showPartijen = async () => {
+  console.log('showPartijen');
+  const data = await fetchData();
+  console.log(data);
+  let partijen = '';
+  for (var partij in data) {
+    partijen += `<p class="c-selectPartij">
+        <input type="radio" id="${partij}" name="partijen" value="${partij}">
+           <label for="${partij}">${partij} </label> </p>`;
+  }
+  console.log(partijen);
+
+  $controlsEl.innerHTML = partijen;
+};
+
+const partijenWissel = function () {
+  console.log('button clicked');
+};
+
 // init function
-
 const init = () => {
-
+  console.log(`init`);
+  showPartijen();
+  $controlsEl.addEventListener('click', partijenWissel);
 };
 
 init();

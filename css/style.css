@@ -19,7 +19,23 @@
     --color-neutral-800: oklch(0.23 0.03 286.47);
     --color-neutral-900: oklch(0.18 0.02 290.7);
 
+    --global-uiColor: var(--color-6);
+    --global-textColor: var(--color-neutral-800);
+    --global-textColor-muted: var(--color-neutral-600);
+    --global-textColor-meta: var(--color-neutral-500);
+    --global-backgroundColor: var(--color-neutral-100);
+    --global-foregroundColor: white;
+    
     --global-fontSize: 14;
+}
+@media (prefers-color-scheme: dark) {
+    :root{
+        --global-textColor: var(--color-neutral-100);
+        --global-textColor-muted: var(--color-neutral-300);
+        --global-textColor-meta: var(--color-neutral-500);
+        --global-backgroundColor: var(--color-neutral-900);
+        --global-foregroundColor: var(--color-neutral-800);
+    }
 }
 
 
@@ -40,15 +56,27 @@ svg {
 
 /* global page styles */
 
-html {}
+html {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    color: var(--global-textColor);
+    background-color: var(--global-backgroundColor);
+    font-size: calc(var(--global-fontSize)/16*1rem);
+}
 
 /* center everything */
 
-body {}
+body {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+}
 
 /* global typography */
 
-h2 {}
+h2 {
+    font-size: 16px;
+}
 
 /* screen reader only object class */
 
@@ -99,11 +127,53 @@ h2 {}
 
 /* app stuff */
 
+.app{
+    background-color: var(--global-foregroundColor);
+    padding: 1.5rem;
+    border-radius: 1rem;
+}
+
+.app__controls [type="radio"]{
+    opacity: 0;
+    display: none;
+}
+
+.app__controls [type="radio"]:checked + label{
+    color: var(--global-uiColor);
+}
+
+.app__controls{
+    color: var(--color-neutral-500);
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+
+
 /* the paths */
 
 /* the legend and controls */
 
 /* theme toggle */
+.theme-toggle{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem;
+}
+
+.theme-toggle__icon{
+    width: 1.5rem;
+}
+
+.theme-toggle__icon--sun{
+    
+}
+
+.theme-toggle__icon--moon{
+    display: none;
+}
 
 /*
     utility classes
